@@ -32,10 +32,9 @@ namespace VAF13.Queries
             }
             catch (Exception e)
             {
-                LogOptions.GetLogger().Warn(e,"Exception in dump mysql database {message}",e.Message);
+                LogOptions.GetLogger().Fatal(e, "Exception in dump mysql database {message}", e.Message);
                 return string.Empty;
             }
-
         }
     }
 }

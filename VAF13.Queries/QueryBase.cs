@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VAF13.LogSettings;
+﻿using VAF13.LogSettings;
 
 namespace VAF13.Queries
 {
@@ -11,7 +6,7 @@ namespace VAF13.Queries
     {
         protected QueryBase()
         {
-            LogOptions.GetLogger().Info("Running Query of {type}",this.GetType());
+            LogOptions.GetLogger().Info("Running Query of {type}", GetType());
         }
 
         public abstract T Query();

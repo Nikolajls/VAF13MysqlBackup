@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VAF13.LogSettings;
 using VAF13.Queries;
 using VAF13.Settings;
@@ -25,15 +21,18 @@ namespace VAF13.Commands
             if (string.IsNullOrWhiteSpace(sqlData))
             {
                 LogOptions.GetLogger().Warn("Unable to dump sql database into string {output}", sqlData);
+                return;
             }
-            else
-            {
-                var dateTime = DateTime.Now;
-                var subPath = Path.Combine(dateTime.Year.ToString(), dateTime.Month.ToString(), dateTime.Day.ToString(), DateTime.Now.ToString("s").Replace(":", "-") + ".sql");
 
-                var initialFile = Path.Combine(BackupSettings.GetInstance().SaveBackupPath, subPath);
-                LogOptions.GetLogger().Info("Initial backup will be saved into {filepath}", initialFile);
-                
+            var dateTime = DateTime.Now;
+            var subPath = Path.Combine(dateTime.Year.ToString(), dateTime.Month.ToString(), dateTime.Day.ToString(),
+                DateTime.Now.ToString("s").Replace(":", "-") + ".sql");
+
+            var initialFile = Path.Combine(BackupSettings.GetInstance().SaveBackupPath, subPath);
+            LogOptions.GetLogger().Info("Initial backup will be saved into {filepath}", initialFile);
+
+            try
+            {
                 var fi = new FileInfo(initialFile);
                 if (!fi?.Directory?.Exists ?? true)
                 {
@@ -46,9 +45,11 @@ namespace VAF13.Commands
                 LogOptions.GetLogger().Info("Saved backup file");
 
                 if (BackupSettings.GetInstance().CopyBackupsTo?.Count > 0)
-                {
                     new CopyBackupFileIntoExtraLocationsCommand(initialFile, subPath).Execute();
-                }
+            }
+            catch (Exception e)
+            {
+                LogOptions.GetLogger().Fatal(e, "Exception in save initial file {message}", e.Message);
             }
         }
     }
