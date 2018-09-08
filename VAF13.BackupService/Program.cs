@@ -9,6 +9,7 @@ namespace VAF13.BackupService
         {
             LogOptions.GetLogger().Info("Starting windows program");
             new BackupDatabaseIntoFileCommand().Execute();
+            LogOptions.GetLogger().Info("Finished executing");
         }
     }
 }
